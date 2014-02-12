@@ -17,6 +17,13 @@ namespace IntToString
             string str = "-23";
 
             Console.WriteLine("Int representation of {0} is {1}", str, StringToInt(str));
+
+            double d = 101.709;
+
+            Console.WriteLine("String representation of {0} is {1}", d, DoubleToString(d));
+
+            string s = "101.709";
+            Console.WriteLine("Double representation of {0} is {1}", s, StringToDouble(s));
         }
 
         static string IntToString(int num)
@@ -98,6 +105,64 @@ namespace IntToString
             }
 
             return result;
+        }
+
+        // This does not fully work
+        static string DoubleToString(double d)
+        {
+            string result;
+            if (d == 0.0)
+            {
+                return "0.0";
+            }
+
+            int input1 = (int)d;
+
+            string result1 = IntToString(input1);
+
+            double fractionalPart = (double)(d - input1);
+
+            int digit = 0;
+            StringBuilder result2 = new StringBuilder("");
+
+            if (fractionalPart > 0)
+            {
+                while (fractionalPart > 0)
+                {
+                    digit = (int)(fractionalPart * 10);
+                    result2.Append(IntToString(digit));
+                    fractionalPart *= 10;
+                    fractionalPart -= (int)fractionalPart;
+                }
+
+                result = result1 + "." + result2.ToString();
+            }
+            else
+            {
+                result = result1;
+            }
+
+            return result;
+        }
+
+        static double StringToDouble(string s)
+        {
+            if (s.Contains("."))
+            {
+                String[] parts = s.Split('.');
+                double beforeDecimal = StringToInt(parts[0]);
+                double afterDecimal = StringToInt(parts[1]);
+
+                double temp = Math.Pow(10, parts[1].Length);
+
+                afterDecimal = (double)(afterDecimal / temp);
+
+                return beforeDecimal + afterDecimal;
+            }
+            else
+            {
+                return StringToInt(s);
+            }
         }
     }
 }
